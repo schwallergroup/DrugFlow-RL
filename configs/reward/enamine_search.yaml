@@ -1,0 +1,21 @@
+# reward for enamine real exact match
+
+_target_: rewards.reward.Reward
+
+root_dir: rewards
+
+prop_cfg:
+  - name: enamine_search
+    calculator:
+      _target_: rewards.calculators.EnamineSearchCalc
+      task: enamine_exact_match
+      # api_key: "KEY" # Optional: defaults to REAL_API_KEY env var
+      batch_size: 50
+      wait_seconds: 300
+    target: ascending
+    minv: 0.0
+    maxv: 1.0
+
+reward_threshold: 0.0
+
+adv_clip_max: 1.0

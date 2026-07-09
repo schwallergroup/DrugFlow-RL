@@ -1,0 +1,4 @@
+# No diversity filter (default) — rewards pass through untouched.
+
+_target_: memory.diversity_filter.DiversityFilter
+name: NoFilter

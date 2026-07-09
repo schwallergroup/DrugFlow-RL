@@ -1,0 +1,7 @@
+_target_: pipeline.utils.logger.WandBLogger
+name: ${expname}
+project: drugflow_nft
+entity: null
+group: null
+mode: 'online'
+savedir: ${save_dir}   # wandb run files are written under here (in a wandb/ subdir)

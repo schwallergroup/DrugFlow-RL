@@ -1,0 +1,20 @@
+# reward for qed
+
+_target_: rewards.reward.Reward
+
+root_dir: rewards
+
+prop_cfg:
+  - name: freedom_similarity
+    calculator:
+      _target_: rewards.calculators.FreedomSimilarityCalc
+      db_path: null   # if null, falls back to the FREEDOM_SYNTHONS env variable; or path/to/Freedom_search_db.spc
+      task: freedom_similarity
+      connectivity_threshold: 1.0
+    target: ascending
+    minv: 0.0
+    maxv: 1.0
+
+reward_threshold: 0.0
+
+adv_clip_max: 1.0

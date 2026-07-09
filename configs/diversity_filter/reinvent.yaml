@@ -1,0 +1,35 @@
+# Scaffold diversity filter (REINVENT-like). Buckets by Bemis-Murcko scaffold
+# over the whole run and ramps the reward down for over-represented scaffolds.
+# This reproduces the original behaviour; see uniqueness.yaml for the variant
+# tuned to lift molecular uniqueness of the final checkpoint's samples.
+
+_target_: memory.diversity_filter.DiversityFilter
+
+# Bucket key:
+#   IdenticalMolecule | IdenticalMurckoScaffold | IdenticalTopologicalScaffold
+#   | ScaffoldSimilarity | NoFilter
+name: IdenticalMurckoScaffold
+
+# Counting window: global | window | batch
+scope: global
+
+# Penalty shape: ramp | binary | continuous
+penalty: ramp
+
+# Only molecules with reward >= minscore count / get penalized.
+minscore: 0.4
+
+# ramp / binary thresholds (occurrences per bucket).
+tol: 10
+buff: 25
+
+# continuous penalty parameter: multiplier = 1 / (1 + count / scale).
+scale: 10.0
+
+# number of steps kept when scope=window.
+window: 10
+
+# ScaffoldSimilarity only.
+minsimilarity: 0.4
+radius: 2
+nbits: 2048

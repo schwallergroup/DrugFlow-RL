@@ -1,0 +1,31 @@
+# Diversity filter tuned to lift molecular UNIQUENESS of samples drawn from the
+# final checkpoint (our deliverable), rather than a harvested archive.
+#
+# - name=IdenticalMolecule: penalize re-generating the *same* molecule, which is
+#   what directly drives uniqueness. (Switch to IdenticalMurckoScaffold to target
+#   scaffold diversity instead.)
+# - scope=window: a stationary, sharp signal over recent steps -> shapes the
+#   final policy, instead of the global count that saturates late in training.
+#   (Molecule-level pressure needs window/global: within a step samples are
+#   already de-duplicated, so batch scope would see no repeats.)
+# - penalty=continuous: penalizes from the first repeat and keeps an ordered
+#   gradient among heavily-repeated molecules (no dead zone, no hard 0 floor).
+
+_target_: memory.diversity_filter.DiversityFilter
+
+name: IdenticalMolecule
+scope: window
+penalty: continuous
+
+minscore: 0.4     # for binary rewards (e.g. enamine_search) this keeps only hits;
+                  # for low-scale continuous rewards, lower it towards your reward scale.
+
+scale: 5.0        # smaller -> harsher; multiplier = 1 / (1 + count / scale)
+window: 20        # steps of history that define "recently over-produced"
+
+# unused by this preset but available:
+tol: 10
+buff: 25
+minsimilarity: 0.4
+radius: 2
+nbits: 2048

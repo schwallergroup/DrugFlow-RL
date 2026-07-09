@@ -1,0 +1,19 @@
+# reward for qed
+
+_target_: rewards.reward.Reward
+
+root_dir: rewards
+
+prop_cfg:
+  - name: qed
+    calculator:
+      _target_: rewards.calculators.MedChemCalc
+      task: qed
+      connectivity_threshold: 1.0
+    target: ascending
+    minv: 0.0
+    maxv: 1.0
+
+reward_threshold: 0.2
+
+adv_clip_max: 1.0

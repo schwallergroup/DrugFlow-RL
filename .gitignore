@@ -1,0 +1,11 @@
+__pycache__
+.idea
+*.out
+runs/
+notebooks/
+*DS_Store
+samples/
+crossdocked/
+__pycache__/
+scripts/
+checkpoints/

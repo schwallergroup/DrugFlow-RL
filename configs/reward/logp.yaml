@@ -1,0 +1,22 @@
+# reward for logp
+# TODO: check min and max values these are just assumptions
+
+_target_: rewards.reward.Reward
+
+root_dir: rewards
+
+prop_cfg:
+  - name: logp
+    calculator:
+      _target_: rewards.calculators.MedChemCalc
+      root_dir: rewards/logp
+      task: qed
+      device: ${device}
+      silent: true
+    target: 2
+    minv: -5.0
+    maxv: 20.0
+
+reward_threshold: 2.0
+
+adv_clip_max: 1.0

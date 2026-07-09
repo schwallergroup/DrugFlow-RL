@@ -1,0 +1,26 @@
+_target_: pipeline.reinforce.ReinForce
+
+# global
+rl_epoch: ${rl_epoch}
+device: ${device}
+
+# saving
+save_dir: ./
+save_freq: ${save_freq}  # for agent model
+
+# sampling
+sample_cfg: ${sample_cfg}
+
+topk_ratio: 0.6
+
+# experience replay
+replay: True
+replay_args:
+  buffer_size: 100
+  sample_size: 10
+  reward_cutoff: 0.15
+
+# finetune
+finetune_cfg:
+  batch_size: ${eval_size}
+  epochs: 5

@@ -1,0 +1,45 @@
+# global setting
+expname: debug
+results_dir: experiments
+project_dir: "${hydra:runtime.cwd}"
+device: cuda
+
+# RL
+rl_epoch: 2
+save_freq: 1
+
+# save dir
+save_dir: ${results_dir}/${expname}-${now:%Y-%m-%d_%H-%M-%S}
+
+# sampling
+sample_cfg:
+  batch_size: 16
+  filter: true
+  n_samples: ${eval_size}
+  filter_criterion: "valid_and_connected"
+  metrics: ["medchem", "posebusters"] # choices: medchem, ff_relaxation, aizynth, fingerprint_novelty, strain, reos, ring_count, chembl_ring_systems, clashes, interactions, energy, geometry, posebusters, mol_props, representation
+
+finetune_cfg:
+  batch_size: 16
+  epochs: 1
+  noise_scale: 0.1 # None for ODE
+
+
+# rewards and finetune
+# maximum number of samples to score per RL loop
+eval_size: 10
+
+hydra:
+  run:
+    #dir: ${results_dir}/${expname}
+    dir: ${results_dir}/${expname}-${now:%Y-%m-%d_%H-%M-%S}
+  job:
+    chdir: False
+
+defaults:
+  - pipeline: hill_climb
+  - model: drugflow
+  - reward: qed
+  - diversity_filter: none
+  - logger: wandb
+  - _self_

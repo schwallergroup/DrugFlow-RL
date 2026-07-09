@@ -1,0 +1,21 @@
+# reward for sa
+
+_target_: rewards.reward.Reward
+
+root_dir: rewards
+
+prop_cfg:
+  - name: sa
+    calculator:
+      _target_: rewards.calculators.MedChemCalc
+      root_dir: rewards/sa
+      task: sa
+      device: ${device}
+      silent: true
+    target: descending
+    minv: 1.0
+    maxv: 10.0
+
+reward_threshold: 4.0
+
+adv_clip_max: 1.0

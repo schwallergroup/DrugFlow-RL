@@ -1,0 +1,19 @@
+# reward for logp (overfit)
+
+_target_: rewards.reward.Reward
+
+root_dir: rewards
+
+prop_cfg:
+  - name: logp_overfit
+    calculator:
+      _target_: rewards.calculators.MedChemCalc
+      task: logp
+      connectivity_threshold: 1.0
+    target: ascending
+    minv: 0
+    maxv: 50
+
+reward_threshold: 0.0
+
+adv_clip_max: 1.0

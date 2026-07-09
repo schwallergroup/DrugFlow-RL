@@ -1,0 +1,100 @@
+expname: nft_Free_kl${nft_cfg.kl_beta}_ts${num_timesteps}_ns${noise_scale}_lr${finetune_cfg.lr}
+project_dir: "${hydra:runtime.cwd}"
+results_dir: experiments
+device: cuda
+
+# RL
+rl_epoch: 200
+save_freq: 4
+
+# save dir
+save_dir: ${results_dir}/${expname}-${now:%Y-%m-%d_%H-%M-%S}
+
+num_timesteps: 250
+num_timestep_buckets: ${num_timesteps}
+
+noise_scale: 10.0
+temperature: 1.0
+
+# sampling
+sample_cfg:
+  batch_size: 128
+  n_samples: ${eval_size}
+  n_steps: ${num_timesteps}
+  filter: true       ## We are filtering by uniqueness whether or not filtering is used, if uniqueness starts to fail, we can remove uniqueness filtering and penalize the reward for duplicates.
+  filter_criterion: "valid_and_connected"
+  metrics: ["medchem", "posebusters"]
+  noise_scale: ${noise_scale}
+  temperature: ${temperature}
+  protein_path: ${project_dir}/data/kras.pdb
+  ligand_path: ${project_dir}/data/kras_ref_ligand.sdf
+  sampler_type: "nft"
+
+
+finetune_cfg:
+  batch_size: 96
+  lr: 1e-5
+  n_steps: ${num_timesteps} # Not used
+
+# NFT trainer config
+nft_cfg:
+  # Timestep configuration
+  num_timestep_buckets: ${num_timestep_buckets}     # Number of timestep buckets to sample from (if equal to num_timesteps then normal sampling)
+  num_timesteps: ${num_timesteps}            # Total timesteps
+
+  # Training hyperparameters
+  inner_epochs: 1               # Number of inner training epochs
+
+  # NFT-specific parameters #TODO the effect of these parameters should be studied
+  beta_x: ${beta_all}                     # Mixing parameter for positive/negative predictions for x
+  beta_h: ${beta_all}                     # Mixing parameter for positive/negative predictions for h
+  beta_e: ${beta_all}                     # Mixing parameter for positive/negative predictions for e
+  kl_beta: 0.005                # KL divergence loss coefficient for reference model
+  adv_mode: ""          # "binary": sign of advantages else normal
+
+  # Optimizer settings
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_weight_decay: 1e-4
+  max_grad_norm: 1.0            # Gradient clipping threshold
+
+  # Old model (sampling policy) update (EMA-like)
+  decay_type: 1  # 0: no decay, 1: balanced (standard), 2: rigid/stable
+
+  # Advantage computation
+  use_multiple_pockets: false   # true: per-pocket stats, false: global stats
+  global_std: false             # Use global std when using per-pocket mean
+  clear_stats_freq: 10          # Clear per-pocket stats every N steps (if enabled)
+
+# Least number of samples to score per RL loop
+eval_size: 256
+beta_all: 1.0
+
+# Pipeline loader settings
+num_workers: 0
+
+gate_metric: null # posebusters.all
+adv_clip_max: dynamic # dynamic or static float value
+
+model:
+  finetune_cfg:
+    n_steps: ${num_timesteps}
+    noise_scale: ${noise_scale}
+
+reward:
+  gate_metric: ${gate_metric}
+  adv_clip_max: ${adv_clip_max}
+
+hydra:
+  run:
+    dir: ${results_dir}/${expname}-${now:%Y-%m-%d_%H-%M-%S}
+  job:
+    chdir: False
+
+defaults:
+  - pipeline: nft
+  - model: drugflow
+  - reward: freedom_similarity
+  - diversity_filter: none  # none, reinvent, uniqueness
+  - logger: wandb
+  - _self_

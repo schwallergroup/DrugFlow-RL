@@ -1,0 +1,18 @@
+# reward for qed
+
+_target_: rewards.reward.Reward
+
+root_dir: rewards
+
+prop_cfg:
+  - name: center_distance
+    calculator:
+      _target_: rewards.calculators.PocketLigandDistanceCalc
+      task: center_distance
+    target: ascending
+    minv: 0.0
+    maxv: 20.0
+
+reward_threshold: 0.0
+
+adv_clip_max: 1.0

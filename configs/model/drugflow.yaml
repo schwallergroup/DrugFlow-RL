@@ -1,0 +1,26 @@
+_target_: models.suite.SBDDSuite
+
+model_name: drugflow
+device: ${device}
+
+# Model checkpoint path - needs to be provided when using
+model_path: ${project_dir}/checkpoints/drugflow.ckpt
+
+# Sampling configuration
+sample_cfg:
+  pocket_distance_cutoff: 8.0
+  molecule_size: null
+  sample_with_ground_truth_size: false
+  starting_point: null
+  size_checkpoint: null
+  sampler_type: "drugflow"
+
+# Finetuning configuration
+finetune_cfg:
+  datadir: ${project_dir}/data
+  sampler: "ForwardEuler"
+  checkpoint: ${..model_path}
+
+
+# Additional configuration overrides
+config_overrides: []
