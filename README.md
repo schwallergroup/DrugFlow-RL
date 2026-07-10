@@ -1,6 +1,10 @@
 # DrugFlow-RL
 
-This repository contains the implementation of the DrugFlow-RL framework, which implements online reinforcement learning for pocket-conditioned molecular generation. We build on top of the structure-based drug design model [DrugFlow](https://arxiv.org/abs/2508.17815). The main online RL framework implement is based on [DiffusionNFT](https://arxiv.org/abs/2509.16117) and code for our [FlowGRPO](https://arxiv.org/abs/2505.05470) adaptation is also present. Code to perform direct preference optimization was implemented previously by DrugFlow and is also available in this repository.
+This repository contains the implementation of the DrugFlow-RL framework, which implements online reinforcement learning for pocket-conditioned molecular generation.
+
+This work is built directly on top of the structure-based drug design model [DrugFlow](https://arxiv.org/abs/2508.17815) ([LPDI-EPFL/DrugFlow](https://github.com/LPDI-EPFL/DrugFlow)), and a substantial portion of the code in this repository is taken from or adapted from the DrugFlow codebase. In particular, the generative model architecture, the flow-matching and Markov-bridge machinery, the sampling code and the data processing/utilities. We gratefully acknowledge the DrugFlow authors for making their code and model checkpoints available; please cite and refer to their work when using this repository.
+
+Our own contributions on top of DrugFlow are the reinforcement learning framework: the main online RL method is based on [DiffusionNFT](https://arxiv.org/abs/2509.16117), and we additionally include our adaptation of [FlowGRPO](https://arxiv.org/abs/2505.05470). The make-on-demand chemical space rewards (Enamine REAL and Freedom 4.0) and the diversity filter are also introduced here.
 
 ## Abstract
 
@@ -88,4 +92,4 @@ The folder `data` contains the necessary files for sampling, including the refer
 
 ## Checkpoints
 
-Optimized model checkpoints are provided on [figshare](10.6084/m9.figshare.31148611).
+Optimized model checkpoints are provided on [figshare](https://doi.org/10.6084/m9.figshare.31148611).
